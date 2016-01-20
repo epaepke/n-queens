@@ -14,17 +14,56 @@
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 
 
-
 window.findNRooksSolution = function(n) {
-  var solution = undefined; //fixme
+  var board = new Board({n:n});
 
+
+  var findNSol = function(board, count, n) {
+    if (count === n) {
+      return board.rows();
+    }
+    for (var i = 0; i < n; i++) {
+      for (var j = 0; j < n; j++) {
+        if (!board.get(i)[j]) {
+          board.togglePiece(i, j);
+          if (!board.hasAnyRooksConflicts()) {
+            return findNSol(board, count + 1, n);
+          }
+          board.togglePiece(i,j);
+        }
+      }
+    }
+  }
+  
+
+  var solution = findNSol(board, 0 , n);
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return solution;
 };
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  //var solutionCount = factorial(n);
+  var board = new Board({n:n});
+  var solutionCount = 0;
+
+  var findNSol = function(board, count, n) {
+    if (count === n) {
+      solutionCount++;
+    }
+    for (var i = 0; i < n; i++) {
+      for (var j = 0; j < n; j++) {
+        if (!board.get(i)[j]) {
+          board.togglePiece(i, j);
+          if (!board.hasAnyRooksConflicts()) {
+            findNSol(board, count + 1, n);
+          }
+          board.togglePiece(i,j);
+        }
+      }
+    }
+  }
+  findNSol(board, 0, n);
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
@@ -40,8 +79,21 @@ window.findNQueensSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  var solutionCount = n - 1;
 
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
 };
+
+
+
+//
+
+var factorial = function(n) {
+  if (n == 0 || n == 1) {
+    return 1;
+  } else {
+    return n * factorial(n - 1);
+  }
+}
+
