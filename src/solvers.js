@@ -83,14 +83,14 @@ window.countNRooksSolutions = function(n) {
 window.findNQueensSolution = function(n) {
   var board = new Board({n:n});
 
-  var findNSol = function(board, count, n) {
+  var findNQSol = function(board, count, n) {
     if (count === n) {
       return board.rows();
     }
     for (var j = 0; j < n; j++) {
       board.togglePiece(count, j);
       if (!board.hasAnyQueensConflicts()) {
-        return findNSol(board, count + 1, n);
+        return findNQSol(board, count + 1, n);
       }
       board.togglePiece(count, j);
     }
@@ -99,7 +99,7 @@ window.findNQueensSolution = function(n) {
   for (var i = 0; i < n; i++) {
     board.togglePiece(0, i);
     if (!board.hasAnyQueensConflicts()) {
-      solution = findNSol(board, 1, n);
+      solution = findNQSol(board, 1, n);
     } else {
       board.togglePiece(0, i);
     }
