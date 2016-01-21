@@ -21,14 +21,12 @@ window.findNRooksSolution = function(n) {
     if (count === n) {
       return board.rows();
     }
-    for (var i = count; i < n; i++) {
-      for (var j = 0; j < n; j++) {
-        board.togglePiece(i, j);
-        if (!board.hasAnyRooksConflicts()) {
-          return findNSol(board, count + 1, n);
-        }
-        board.togglePiece(i,j);
+    for (var j = 0; j < n; j++) {
+      board.togglePiece(count, j);
+      if (!board.hasAnyRooksConflicts()) {
+        return findNSol(board, count + 1, n);
       }
+      board.togglePiece(count, j);
     }
   };
 
@@ -48,22 +46,24 @@ window.findNRooksSolution = function(n) {
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
   //var solutionCount = factorial(n);
+  if (n == 1) {
+    return 1;
+  }
   var solutionCount = 0;
 
   var board = new Board({n:n});
 
   var findNSol = function(board, count, n) {
-    if (count === n) {
-      solutionCount++;
-    }
-    for (var i = count; i < n; i++) {
-      for (var j = 0; j < n; j++) {
-        board.togglePiece(i, j);
-        if (!board.hasAnyRooksConflicts()) {
+    for (var j = 0; j < n; j++) {
+      board.togglePiece(count, j);
+      if (!board.hasAnyRooksConflicts()) {
+        if (count + 1 === n) {
+          solutionCount++;
+        } else {
           findNSol(board, count + 1, n);
         }
-        board.togglePiece(i,j);
       }
+      board.togglePiece(count, j);
     }
   };
 
@@ -81,55 +81,32 @@ window.countNRooksSolutions = function(n) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
+  var board = new Board({n:n});
 
- //  console.log('aaaaaa');
- //  var board = new Board({n:n});
- //  console.log(board.rows().toString())
- //  var sol;
- //  var shouldRun = true;
+  var findNSol = function(board, count, n) {
+    if (count === n) {
+      return board.rows();
+    }
+    for (var j = 0; j < n; j++) {
+      board.togglePiece(count, j);
+      if (!board.hasAnyQueensConflicts()) {
+        return findNSol(board, count + 1, n);
+      }
+      board.togglePiece(count, j);
+    }
+  };
 
- //  var findNQSol = function(board, count, n) {
- //    if (n === 0 && count === 0 && sol === undefined) {
- //      sol = board.rows();
- //    }
+  for (var i = 0; i < n; i++) {
+    board.togglePiece(0, i);
+    if (!board.hasAnyQueensConflicts()) {
+      solution = findNSol(board, 1, n);
+    } else {
+      board.togglePiece(0, i);
+    }
+  }
 
- //    if (n === 1 && count === 0 && sol === undefined) {
- //      board.togglePiece(0,0);
- //      sol = board.rows();
- //    } 
- //    // else if (n === 1 && count === 0) {
- //    //   board.togglePiece(0,0);
- //    //   console.log('board returned ', board);
- //    //   return board.rows();
- //    // }
- //    console.log('n is equal to: ', n)
- //    console.log('count is equal to: ', count);
-
- //    if (count === n && sol === undefined) {
- //      console.log('the current board', board.rows());
- //      sol =  board.rows();
- //    }
- //    for (var i = 0; i < n; i++) {
- //      for (var j = 0; j < n; j++) {
- //        if (!board.get(i)[j]) {
- //          board.togglePiece(i, j);
- //          if (!board.hasAnyQueensConflicts()) {
- //            findNQSol(board, count + 1, n);
- //          }
- //          board.togglePiece(i,j);
- //        }
- //      }
- //    }
- //  }
-  
- //  var solution = findNQSol(board, 0, n);
- //  //if (solution === undefined) {
- //   // return 0;
- // // }
-
- //  //console.log('solution: ', solution.rows().toString());
- //  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
- //  return undefined;
+  console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
+  return solution;
 };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
