@@ -69,14 +69,14 @@ window.findNQueensSolution = function(n) {
   var board = new Board({n:n});
   var newBoard = new Board({n:n});
   var sol;
-  var keepRunning = true;
+  var foundSolution = false;
   if (n == 1) {
     board.togglePiece(0,0);
     return board.rows();
   }
 
   var findNQSol = function(board, count) {
-    if (!keepRunning) {
+    if (!foundSolution) {
       return;
     }
     if (count === n && sol === undefined) {
@@ -86,7 +86,7 @@ window.findNQueensSolution = function(n) {
           newBoard.get(i)[j] = sol[i][j];
         }
       }
-      keepRunning = false;
+      foundSolution = true;
     } else {
     for (var j = 0; j < n; j++) {
       board.togglePiece(count, j);
