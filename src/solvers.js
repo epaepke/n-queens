@@ -111,28 +111,21 @@ window.countNQueensSolutions = function(n) {
   var solutionCount = 0;
   var keepRunning = true;
 
-  var findNQSol = function(board, count, n) {
+  var findNQSol = function(board, count) {
     if (count === n) {
-      console.log(n);
       solutionCount++;
     } else {
     for (var j = 0; j < n; j++) {
       board.togglePiece(count, j);
       if (!board.hasAnyQueensConflicts()) {
-        findNQSol(board, count + 1, n);
+        findNQSol(board, count + 1);
       }
       board.togglePiece(count, j);
     }
   }
   };
 
-  for (var i = 0; i < n; i++) {
-    board.togglePiece(0, i);
-    if (!board.hasAnyQueensConflicts()) {
-      findNQSol(board, 1, n);
-    }
-      board.togglePiece(0, i);
-  }
+  findNQSol(board, 0);
 
   if (n == 1 || n == 0) {
     solutionCount = 1;
