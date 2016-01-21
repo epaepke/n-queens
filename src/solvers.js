@@ -42,30 +42,23 @@ window.countNRooksSolutions = function(n) {
     return 1;
   }
   var solutionCount = 0;
-
   var board = new Board({n:n});
 
-  var findNSol = function(board, count, n) {
+  var findNSol = function(board, count) {
     for (var j = 0; j < n; j++) {
       board.togglePiece(count, j);
       if (!board.hasAnyRooksConflicts()) {
         if (count + 1 === n) {
           solutionCount++;
         } else {
-          findNSol(board, count + 1, n);
+          findNSol(board, count + 1);
         }
       }
       board.togglePiece(count, j);
     }
   };
-
-  for (var i = 0; i < n; i++) {
-    board.togglePiece(0, i);
-    if (!board.hasAnyRooksConflicts()) {
-      findNSol(board, 1, n);
-    }
-    board.togglePiece(0, i);
-  }
+  
+  findNSol(board, 0);
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
