@@ -90,7 +90,7 @@ window.findNQueensSolution = function(n) {
     return board.rows();
   }
 
-  var findNQSol = function(board, count, n) {
+  var findNQSol = function(board, count) {
     if (!keepRunning) {
       return;
     }
@@ -106,20 +106,14 @@ window.findNQueensSolution = function(n) {
     for (var j = 0; j < n; j++) {
       board.togglePiece(count, j);
       if (!board.hasAnyQueensConflicts()) {
-        findNQSol(board, count + 1, n);
+        findNQSol(board, count + 1);
       }
       board.togglePiece(count, j);
     }
   }
   };
 
-  for (var i = 0; i < n; i++) {
-    board.togglePiece(0, i);
-    if (!board.hasAnyQueensConflicts()) {
-      findNQSol(board, 1, n);
-    }
-      board.togglePiece(0, i);
-  }
+  findNQSol(board, 0);
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(sol));
   return newBoard.rows();
