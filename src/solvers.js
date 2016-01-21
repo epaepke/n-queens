@@ -82,17 +82,27 @@ window.countNRooksSolutions = function(n) {
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
   var board = new Board({n:n});
+  var newBoard = new Board({n:n});
   var sol;
+  var keepRunning = true;
   if (n == 1) {
     board.togglePiece(0,0);
     return board.rows();
   }
 
   var findNQSol = function(board, count, n) {
-    if (count === n && sol === undefined) {
-      console.log(n);
-      sol = board.rows().slice();
+    if (!keepRunning) {
+      return;
     }
+    if (count === n && sol === undefined) {
+      sol = board.rows().slice();
+      for (var i = 0; i < n; i++) {
+        for (var j = 0; j < n; j++) {
+          newBoard.get(i)[j] = sol[i][j];
+        }
+      }
+      keepRunning = false;
+    } else {
     for (var j = 0; j < n; j++) {
       board.togglePiece(count, j);
       if (!board.hasAnyQueensConflicts()) {
@@ -100,6 +110,7 @@ window.findNQueensSolution = function(n) {
       }
       board.togglePiece(count, j);
     }
+  }
   };
 
   for (var i = 0; i < n; i++) {
@@ -111,15 +122,45 @@ window.findNQueensSolution = function(n) {
   }
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(sol));
-  return sol;
+  return newBoard.rows();
 };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  // var solutionCount = n - 1;
+  var board = new Board({n:n});
+  var newBoard = new Board({n:n});
+  var sol;
+  var keepRunning = true;
+  if (n == 1) {
+    board.togglePiece(0,0);
+    return board.rows();
+  }
 
-  // console.log('Number of solutions for ' + n + ' queens:', solutionCount);
-  // return solutionCount;
+  var findNQSol = function(board, count, n) {
+    if (count === n && sol === undefined) {
+      console.log(n);
+      solutionCount++;
+    } else {
+    for (var j = 0; j < n; j++) {
+      board.togglePiece(count, j);
+      if (!board.hasAnyQueensConflicts()) {
+        findNQSol(board, count + 1, n);
+      }
+      board.togglePiece(count, j);
+    }
+  }
+  };
+
+  for (var i = 0; i < n; i++) {
+    board.togglePiece(0, i);
+    if (!board.hasAnyQueensConflicts()) {
+      findNQSol(board, 1, n);
+    }
+      board.togglePiece(0, i);
+  }
+
+  console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
+  return solutionCount;
 };
 
 
