@@ -43,18 +43,23 @@ window.countNRooksSolutions = function(n) {
   }
   var solutionCount = 0;
   var board = new Board({n:n});
+  var occupiedCols = {};
 
   var findNSol = function(board, count) {
     for (var j = 0; j < n; j++) {
-      board.togglePiece(count, j);
-      if (!board.hasAnyRooksConflicts()) {
-        if (count + 1 === n) {
-          solutionCount++;
-        } else {
-          findNSol(board, count + 1);
+      if (occupiedCols[j] === undefined) {
+        board.togglePiece(count, j);
+        if (!board.hasAnyRooksConflicts()) {
+          if (count + 1 === n) {
+            solutionCount++;
+          } else {
+            occupiedCols[j] = j;
+            findNSol(board, count + 1);
+          }
         }
+        delete occupiedCols[j];
+        board.togglePiece(count, j);
       }
-      board.togglePiece(count, j);
     }
   };
   
