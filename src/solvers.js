@@ -129,15 +129,11 @@ window.findNQueensSolution = function(n) {
 window.countNQueensSolutions = function(n) {
   var board = new Board({n:n});
   var newBoard = new Board({n:n});
-  var sol;
+  var solutionCount = 0;
   var keepRunning = true;
-  if (n == 1) {
-    board.togglePiece(0,0);
-    return board.rows();
-  }
 
   var findNQSol = function(board, count, n) {
-    if (count === n && sol === undefined) {
+    if (count === n) {
       console.log(n);
       solutionCount++;
     } else {
@@ -157,6 +153,10 @@ window.countNQueensSolutions = function(n) {
       findNQSol(board, 1, n);
     }
       board.togglePiece(0, i);
+  }
+
+  if (n == 1 || n == 0) {
+    solutionCount = 1;
   }
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
