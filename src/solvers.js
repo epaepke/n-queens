@@ -117,19 +117,24 @@ window.countNQueensSolutions = function(n) {
   var newBoard = new Board({n:n});
   var solutionCount = 0;
   var keepRunning = true;
+  var occupiedCols = {};
 
   var findNQSol = function(board, count) {
     if (count === n) {
       solutionCount++;
     } else {
-    for (var j = 0; j < n; j++) {
-      board.togglePiece(count, j);
-      if (!board.hasAnyQueensConflicts()) {
-        findNQSol(board, count + 1);
+      if (occupiedCols[j] === undefined) {
+        for (var j = 0; j < n; j++) {
+          board.togglePiece(count, j);
+          if (!board.hasAnyQueensConflicts()) {
+            occupiedCols[j] = j;
+            findNQSol(board, count + 1);
+          }
+          delete occupiedCols[j];
+          board.togglePiece(count, j);
+        }
       }
-      board.togglePiece(count, j);
     }
-  }
   };
 
   findNQSol(board, 0);
