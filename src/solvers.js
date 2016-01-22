@@ -37,7 +37,7 @@ window.findNRooksSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n) {
-  //var solutionCount = factorial(n);
+  // return factorial(n);
   if (n == 1) {
     return 1;
   }
@@ -132,6 +132,8 @@ window.countNQueensSolutions = function(n) {
   findPoss(0, 0, 0);
   return count;
 
+
+  // My solution without using bitwise operator
   // var board = new Board({n:n});
   // var newBoard = new Board({n:n});
   // var solutionCount = 0;
