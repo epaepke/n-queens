@@ -72,7 +72,6 @@ window.countNRooksSolutions = function(n) {
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
   var board = new Board({n:n});
-  // var newBoard = new Board({n:n});
   var solution;
   var foundSolution = false;
   if (n == 1) {
@@ -113,38 +112,58 @@ window.findNQueensSolution = function(n) {
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  var board = new Board({n:n});
-  var newBoard = new Board({n:n});
-  var solutionCount = 0;
-  var keepRunning = true;
-  var occupiedCols = {};
+  var all = Math.pow(2, n) - 1;
+  var count = 0;
 
-  var findNQSol = function(board, count) {
-    if (count === n) {
-      solutionCount++;
-    } else {
-      if (occupiedCols[j] === undefined) {
-        for (var j = 0; j < n; j++) {
-          board.togglePiece(count, j);
-          if (!board.hasAnyQueensConflicts()) {
-            occupiedCols[j] = j;
-            findNQSol(board, count + 1);
-          }
-          delete occupiedCols[j];
-          board.togglePiece(count, j);
-        }
-      }
+  var findPoss = function(l, c, r) {
+    if (c === all) {
+      count++;
+      return;
+    }
+    var poss = ~(l|c|r) & all;
+
+    while (poss) {
+      var bit = poss & -poss;
+      poss -= bit;
+      findPoss((l|bit)<<1, c|bit, (r|bit)>>1);
     }
   };
 
-  findNQSol(board, 0);
+  findPoss(0, 0, 0);
+  return count;
 
-  if (n == 1 || n == 0) {
-    solutionCount = 1;
-  }
+  // var board = new Board({n:n});
+  // var newBoard = new Board({n:n});
+  // var solutionCount = 0;
+  // var keepRunning = true;
+  // var occupiedCols = {};
 
-  console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
-  return solutionCount;
+  // var findNQSol = function(board, count) {
+  //   if (count === n) {
+  //     solutionCount++;
+  //   } else {
+  //     if (occupiedCols[j] === undefined) {
+  //       for (var j = 0; j < n; j++) {
+  //         board.togglePiece(count, j);
+  //         if (!board.hasAnyQueensConflicts()) {
+  //           occupiedCols[j] = j;
+  //           findNQSol(board, count + 1);
+  //         }
+  //         delete occupiedCols[j];
+  //         board.togglePiece(count, j);
+  //       }
+  //     }
+  //   }
+  // };
+
+  // findNQSol(board, 0);
+
+  // if (n == 1 || n == 0) {
+  //   solutionCount = 1;
+  // }
+
+  // console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
+  // return solutionCount;
 };
 
 
