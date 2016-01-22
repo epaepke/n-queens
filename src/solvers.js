@@ -124,7 +124,7 @@ window.countNQueensSolutions = function(n) {
 
     while (poss) {
       var bit = poss & -poss;
-      poss -= bit;
+      poss = poss^bit;
       findPoss((l|bit)<<1, c|bit, (r|bit)>>1);
     }
   };
